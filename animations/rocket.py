@@ -54,12 +54,13 @@ async def animate_rocket(canvas, row: int, column: int, frames: List):
     frame = next(iterator)
 
     while True:
+        draw_frame(canvas, row, column, frame, negative=True)
+        frame = next(iterator)
+
         rocket_controls = read_controls(canvas)
         row += rocket_controls[0]
         column += rocket_controls[1]
 
-        draw_frame(canvas, row, column, frame, negative=True)
-        frame = next(iterator)
         draw_frame(canvas, row, column, frame)
         canvas.refresh()
 
