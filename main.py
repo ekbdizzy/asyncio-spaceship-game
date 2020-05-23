@@ -2,64 +2,13 @@ import asyncio
 import time
 import curses
 import random
+from animations import blink, fire, animate_rocket, read_rocket_frames
 from typing import Callable, List
 
 TIC_TIMEOUT: float = 0.1
 SYMBOLS: str = '+*.:'
 STARS: List[str] = [symbol for symbol in SYMBOLS]
 STARS_QUANTITY: int = 50
-
-
-async def blink(canvas, row: int, column: int, symbol='*') -> None:
-    """ Star animation """
-
-    while True:
-
-        for frame in range(random.randint(1, 20)):
-            canvas.addstr(row, column, symbol, curses.A_DIM)
-            await asyncio.sleep(0)
-
-        for frame in range(random.randint(1, 3)):
-            canvas.addstr(row, column, symbol)
-            await asyncio.sleep(0)
-
-        for frame in range(random.randint(1, 5)):
-            canvas.addstr(row, column, symbol, curses.A_BOLD)
-            await asyncio.sleep(0)
-
-        for frame in range(random.randint(1, 3)):
-            canvas.addstr(row, column, symbol)
-            await asyncio.sleep(0)
-
-
-async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, columns_speed=0) -> None:
-    """Display animation of gun shot, direction and speed can be specified."""
-
-    row, column = start_row, start_column
-
-    canvas.addstr(round(row), round(column), '*')
-    await asyncio.sleep(0)
-
-    canvas.addstr(round(row), round(column), 'O')
-    await asyncio.sleep(0)
-    canvas.addstr(round(row), round(column), ' ')
-
-    row += rows_speed
-    column += columns_speed
-
-    symbol = '-' if columns_speed else '|'
-
-    rows, columns = canvas.getmaxyx()
-    max_row, max_column = rows - 1, columns - 1
-
-    curses.beep()
-
-    while 0 < row < max_row and 0 < column < max_column:
-        canvas.addstr(round(row), round(column), symbol)
-        await asyncio.sleep(0)
-        canvas.addstr(round(row), round(column), ' ')
-        row += rows_speed
-        column += columns_speed
 
 
 def draw(canvas):
@@ -78,6 +27,7 @@ def draw(canvas):
     ]
 
     coroutines.append(fire(canvas, start_row=canvas_center[0], start_column=canvas_center[1]))
+    coroutines.append(animate_rocket(canvas, 5, 10, read_rocket_frames()))
 
     while True:
         for coroutine in coroutines.copy():
