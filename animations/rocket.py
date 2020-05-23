@@ -3,7 +3,7 @@ import asyncio
 import curses
 import time
 
-from tools import draw_frame
+from tools import draw_frame, read_controls
 from typing import List
 from itertools import cycle
 
@@ -54,9 +54,13 @@ async def animate_rocket(canvas, row: int, column: int, frames: List):
     frame = next(iterator)
 
     while True:
+        rocket_controls = read_controls(canvas)
+        row += rocket_controls[0]
+        column += rocket_controls[1]
+
         draw_frame(canvas, row, column, frame, negative=True)
         frame = next(iterator)
         draw_frame(canvas, row, column, frame)
         canvas.refresh()
-        await asyncio.sleep(0)
 
+        await asyncio.sleep(0)
