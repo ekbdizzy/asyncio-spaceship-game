@@ -1,9 +1,7 @@
-import os
 import asyncio
 import curses
-import time
 
-from tools import draw_frame, read_controls
+from tools import draw_frame, change_object_position
 from typing import List
 from itertools import cycle
 
@@ -38,18 +36,7 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
         column += columns_speed
 
 
-def read_rocket_frames() -> List[str]:
-    """ Helper func to get frames for rocket animation """
-
-    frames = []
-    frames_directory = os.path.join(os.getcwd(), 'graphic/rocket_frames/')
-    for file in os.listdir(frames_directory):
-        with open(os.path.join(frames_directory, file)) as frame:
-            frames.append(frame.read())
-    return frames
-
-
-async def animate_rocket(canvas, row: int, column: int, frames: List):
+async def rocket(canvas, row: int, column: int, frames: List):
     iterator = cycle(frames)
     frame = next(iterator)
 
@@ -57,9 +44,8 @@ async def animate_rocket(canvas, row: int, column: int, frames: List):
         draw_frame(canvas, row, column, frame, negative=True)
         frame = next(iterator)
 
-        rocket_controls = read_controls(canvas)
-        row += rocket_controls[0]
-        column += rocket_controls[1]
+        # change position of rocket if arrows pushed
+        row, column = change_object_position(canvas, row, column, frames)
 
         draw_frame(canvas, row, column, frame)
         canvas.refresh()

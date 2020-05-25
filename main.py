@@ -1,13 +1,15 @@
 import time
 import curses
 import random
-from animations import blink, fire, animate_rocket, read_rocket_frames
+from animations import blink, fire, rocket
+from tools import read_animation_frames
 from typing import Callable, List
 
 TIC_TIMEOUT: float = 0.1
 SYMBOLS: str = '+*.:'
 STARS: List[str] = [symbol for symbol in SYMBOLS]
 STARS_QUANTITY: int = 50
+ROCKET_ANIMATIONS_FRAMES = 'graphic/rocket_frames/'
 
 
 def draw(canvas):
@@ -23,15 +25,17 @@ def draw(canvas):
     # added stars
     for n in range(STARS_QUANTITY):
         coroutines.append(blink(canvas,
-                                random.randint(2, canvas_x_size - 2),
-                                random.randint(2, canvas_y_size - 2),
+                                row=random.randint(2, canvas_x_size - 2),
+                                column=random.randint(2, canvas_y_size - 2),
                                 symbol=random.choice(STARS)))
 
     # added fire
     coroutines.append(fire(canvas, start_row=canvas_center[0], start_column=canvas_center[1]))
 
     # added rocket
-    coroutines.append(animate_rocket(canvas, canvas_center[0], canvas_center[1], read_rocket_frames()))
+    coroutines.append(rocket(canvas,
+                             row=2, column=2,
+                             frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
 
     while True:
         for coroutine in coroutines.copy():
