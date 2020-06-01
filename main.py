@@ -35,6 +35,8 @@ def draw(canvas):
     # added rocket
     coroutines.append(rocket(canvas,
                              row=5, column=5,
+                             speed_of_rocket=1,
+                             speed_animation_divider=2,
                              frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
 
     while True:

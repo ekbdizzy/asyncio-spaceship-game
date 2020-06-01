@@ -36,15 +36,15 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
         column += columns_speed
 
 
-async def rocket(canvas, row: int, column: int, speed_divider: int, frames: List, ):
+async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1, speed_animation_divider=1):
     frames_infinite_cycle = cycle(frames)
 
     current_frame = ''
     for frame in frames_infinite_cycle:
-        for i in set_animation_speed_divider(speed_divider):
+        for i in set_animation_speed_divider(speed_animation_divider):
             if i:
                 draw_frame(canvas, row, column, current_frame, negative=True)
-                row, column = change_object_position(canvas, row, column, frames, speed=10)
+                row, column = change_object_position(canvas, row, column, frames, speed=speed_of_rocket)
                 draw_frame(canvas, row, column, frame)
                 current_frame = frame
                 canvas.refresh()
