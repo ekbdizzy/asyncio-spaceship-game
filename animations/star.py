@@ -4,7 +4,7 @@ import random
 
 
 async def blink(canvas, row: int, column: int, symbol='*') -> None:
-    """ Star animation """
+    """Star animation."""
 
     while True:
 

@@ -1,7 +1,7 @@
 import asyncio
 import curses
 
-from tools import draw_frame, change_object_position
+from tools import draw_frame, change_object_position, set_animation_speed_divider
 from typing import List
 from itertools import cycle
 
@@ -36,18 +36,16 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
         column += columns_speed
 
 
-async def rocket(canvas, row: int, column: int, frames: List):
-    iterator = cycle(frames)
-    frame = next(iterator)
+async def rocket(canvas, row: int, column: int, speed_divider: int, frames: List, ):
+    frames_infinite_cycle = cycle(frames)
 
-    while True:
-        draw_frame(canvas, row, column, frame, negative=True)
-        frame = next(iterator)
-
-        # change position of rocket if arrows pushed
-        row, column = change_object_position(canvas, row, column, frames)
-
-        draw_frame(canvas, row, column, frame)
-        canvas.refresh()
-
-        await asyncio.sleep(0)
+    current_frame = ''
+    for frame in frames_infinite_cycle:
+        for i in set_animation_speed_divider(speed_divider):
+            if i:
+                draw_frame(canvas, row, column, current_frame, negative=True)
+                row, column = change_object_position(canvas, row, column, frames, speed=10)
+                draw_frame(canvas, row, column, frame)
+                current_frame = frame
+                canvas.refresh()
+            await asyncio.sleep(0)

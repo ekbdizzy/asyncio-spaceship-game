@@ -68,10 +68,24 @@ def draw_frame(canvas, start_row, start_column, text, negative=False):
             canvas.addch(row, column, symbol)
 
 
-def get_frame_size(text):
-    """Calculate size of multiline text fragment, return pair — number of rows and colums."""
+def get_frame_size(text: str, rows_only=False, columns_only=False) -> tuple or int:
+    """Calculate size of multiline text fragment.
+
+    Returns:
+        by default: tuple of rows and columns
+        rows_only=True: return rows
+        columns_only=True: return columns
+
+    """
 
     lines = text.splitlines()
     rows = len(lines)
     columns = max([len(line) for line in lines])
+
+    if rows_only:
+        return rows
+
+    if columns_only:
+        return columns
+
     return rows, columns

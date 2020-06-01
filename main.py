@@ -15,10 +15,10 @@ ROCKET_ANIMATIONS_FRAMES = 'graphic/rocket_frames/'
 def draw(canvas):
     curses.curs_set(0)
     canvas.nodelay(True)
-    canvas.refresh()
     canvas.border()
     canvas_x_size, canvas_y_size = canvas.getmaxyx()
-    canvas_center = (canvas_x_size // 2, canvas_y_size // 2)
+    canvas_x_center = canvas_x_size // 2
+    canvas_y_center = canvas_y_size // 2
 
     coroutines: List[Callable[...]] = []
 
@@ -30,21 +30,21 @@ def draw(canvas):
                                 symbol=random.choice(STARS)))
 
     # added fire
-    coroutines.append(fire(canvas, start_row=canvas_center[0], start_column=canvas_center[1]))
+    coroutines.append(fire(canvas, start_row=canvas_x_center, start_column=canvas_y_center))
 
     # added rocket
     coroutines.append(rocket(canvas,
-                             row=2, column=2,
+                             row=5, column=5,
                              frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
 
     while True:
         for coroutine in coroutines.copy():
             try:
                 coroutine.send(None)
-                canvas.refresh()
             except StopIteration:
                 coroutines.remove(coroutine)
         time.sleep(TIC_TIMEOUT)
+        canvas.refresh()
 
 
 if __name__ == '__main__':
