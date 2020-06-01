@@ -6,10 +6,16 @@ from tools import read_animation_frames
 from typing import Callable, List
 
 TIC_TIMEOUT: float = 0.1
+
+# stars
 SYMBOLS: str = '+*.:'
 STARS: List[str] = [symbol for symbol in SYMBOLS]
 STARS_QUANTITY: int = 50
+
+# rocket
 ROCKET_ANIMATIONS_FRAMES = 'graphic/rocket_frames/'
+SPEED_OF_ROCKET = 10
+ROCKET_ANIMATION_SPEED_DIVIDER = 2
 
 
 def draw(canvas):
@@ -34,9 +40,9 @@ def draw(canvas):
 
     # added rocket
     coroutines.append(rocket(canvas,
-                             row=5, column=5,
-                             speed_of_rocket=1,
-                             speed_animation_divider=2,
+                             row=2, column=2,
+                             speed_of_rocket=SPEED_OF_ROCKET,
+                             speed_animation_divider=ROCKET_ANIMATION_SPEED_DIVIDER,
                              frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
 
     while True:

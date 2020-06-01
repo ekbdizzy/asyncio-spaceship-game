@@ -26,7 +26,7 @@ def read_animation_frames(path_to_frames: str) -> List[str]:
 def set_axis_position(next_axis_position: int, object_axis_size: int, canvas_axis_size: int) -> int:
     """Return value of axis_position between 1 and canvas_axis_size."""
 
-    if next_axis_position < 0:
+    if next_axis_position < 1:
         return max(1, next_axis_position)
     return min(next_axis_position, canvas_axis_size - object_axis_size - 1)
 
