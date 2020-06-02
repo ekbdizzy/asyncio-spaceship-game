@@ -22,20 +22,21 @@ def draw(canvas):
     curses.curs_set(0)
     canvas.nodelay(True)
     canvas.border()
-    canvas_x_size, canvas_y_size = canvas.getmaxyx()
-    canvas_x_center = canvas_x_size // 2
-    canvas_y_center = canvas_y_size // 2
 
     coroutines: List[Callable[...]] = []
 
     # added stars
+    # Note that canvas.getmaxyx() return a tuple: width and height of the window, not a max y and max x values.
+    canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
     for n in range(STARS_QUANTITY):
         coroutines.append(blink(canvas,
-                                row=random.randint(2, canvas_x_size - 2),
-                                column=random.randint(2, canvas_y_size - 2),
+                                row=random.randint(2, canvas_rows_size - 2),
+                                column=random.randint(2, canvas_columns_size - 2),
                                 symbol=random.choice(STARS)))
 
     # added fire
+    canvas_x_center = canvas_rows_size // 2
+    canvas_y_center = canvas_columns_size // 2
     coroutines.append(fire(canvas, start_row=canvas_x_center, start_column=canvas_y_center))
 
     # added rocket

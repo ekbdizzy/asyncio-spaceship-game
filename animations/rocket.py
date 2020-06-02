@@ -1,9 +1,9 @@
 import asyncio
 import curses
 
-from tools import draw_frame, change_object_position, set_animation_speed_divider
+from itertools import cycle, chain
+from tools import draw_frame, get_object_position
 from typing import List
-from itertools import cycle
 
 
 async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, columns_speed=0) -> None:
@@ -37,15 +37,15 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
 
 
 async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1, speed_animation_divider=1):
-    frames_infinite_cycle = cycle(frames)
+    animation_groups = [[frame] * speed_animation_divider for frame in frames]
+    animation = chain(*animation_groups)
+    frames_infinite_cycle = cycle(animation)
 
     current_frame = ''
     for frame in frames_infinite_cycle:
-        for i in set_animation_speed_divider(speed_animation_divider):
-            if i:
-                draw_frame(canvas, row, column, current_frame, negative=True)
-                row, column = change_object_position(canvas, row, column, frames, speed=speed_of_rocket)
-                draw_frame(canvas, row, column, frame)
-                current_frame = frame
-                canvas.refresh()
-            await asyncio.sleep(0)
+        draw_frame(canvas, row, column, current_frame, negative=True)
+        row, column = get_object_position(canvas, row, column, frames, speed=speed_of_rocket)
+        draw_frame(canvas, row, column, frame)
+        current_frame = frame
+        canvas.refresh()
+        await asyncio.sleep(0)

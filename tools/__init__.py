@@ -7,6 +7,5 @@ from .curses_tools import (
 from .objects_tools import (
     get_object_size,
     read_animation_frames,
-    change_object_position,
-    set_animation_speed_divider
+    get_object_position
 )
