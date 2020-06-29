@@ -1,7 +1,7 @@
 import time
 import curses
 import random
-from animations import blink, fire, rocket
+from animations import blink, fire, rocket, fill_orbit_with_garbage
 from tools import read_animation_frames
 from typing import Callable, List
 
@@ -45,6 +45,9 @@ def draw(canvas):
                              speed_of_rocket=SPEED_OF_ROCKET,
                              speed_animation_divider=ROCKET_ANIMATION_SPEED_DIVIDER,
                              frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
+
+    for i in range(5):
+        coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
 
     while True:
         for coroutine in coroutines.copy():
