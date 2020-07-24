@@ -2,7 +2,7 @@ import asyncio
 import curses
 
 from itertools import cycle, chain
-from tools import draw_frame, get_object_position
+from tools import draw_frame, get_object_position, sleep
 from typing import List
 
 
@@ -28,9 +28,9 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
 
     curses.beep()
 
-    while 0 < row < max_row and 0 < column < max_column:
+    while 1 < row < max_row and 0 < column < max_column:
         canvas.addstr(round(row), round(column), symbol)
-        await asyncio.sleep(0)
+        await sleep()
         canvas.addstr(round(row), round(column), ' ')
         row += rows_speed
         column += columns_speed
@@ -48,4 +48,4 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         draw_frame(canvas, row, column, frame)
         current_frame = frame
         canvas.refresh()
-        await asyncio.sleep(0)
+        await sleep()

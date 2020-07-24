@@ -9,3 +9,7 @@ from .objects_tools import (
     read_animation_frames,
     get_object_position
 )
+
+from .common_tools import (
+    sleep,
+)
