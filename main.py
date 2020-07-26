@@ -3,7 +3,8 @@ import curses
 import random
 from animations import blink, fire, rocket, fill_orbit_with_garbage
 from tools import read_animation_frames
-from typing import Callable, List
+from tools.game_state import coroutines
+from typing import List
 
 TIC_TIMEOUT: float = 0.1
 
@@ -23,11 +24,10 @@ def draw(canvas):
     canvas.nodelay(True)
     canvas.border()
 
-    coroutines: List[Callable[...]] = []
-
-    # added stars
     # Note that canvas.getmaxyx() return a tuple: width and height of the window, not a max y and max x values.
     canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
+
+    # added stars
     for n in range(STARS_QUANTITY):
         coroutines.append(blink(canvas,
                                 row=random.randint(2, canvas_rows_size - 2),

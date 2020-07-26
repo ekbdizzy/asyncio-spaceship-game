@@ -1,9 +1,13 @@
 import asyncio
 import curses
+from tools.game_state import coroutines
 
 from itertools import cycle, chain
-from tools import draw_frame, get_object_position, sleep
+from tools import draw_frame, sleep, read_controls, get_object_size
 from typing import List
+
+from tools.objects_tools import get_axis_position
+from tools.physics import update_speed
 
 
 async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, columns_speed=0) -> None:
@@ -26,7 +30,7 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
     rows, columns = canvas.getmaxyx()
     max_row, max_column = rows - 1, columns - 1
 
-    curses.beep()
+    # curses.beep()
 
     while 0 < row < max_row and 0 < column < max_column:
         canvas.addstr(round(row), round(column), symbol)
@@ -37,6 +41,9 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
 
 
 async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1, speed_animation_divider=1):
+    # Note that canvas.getmaxyx() return a tuple: width and height of the window, not a max y and max x values.
+    canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
+
     animation_groups = [[frame] * speed_animation_divider for frame in frames]
     animation = chain(*animation_groups)
     frames_infinite_cycle = cycle(animation)
@@ -45,14 +52,21 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
     row_speed, column_speed = 0, 0
     for frame in frames_infinite_cycle:
         draw_frame(canvas, row, column, current_frame, negative=True)
-        row, column, row_speed, column_speed = get_object_position(
-            canvas,
-            row,
-            column,
-            frames,
-            row_speed,
-            column_speed,
-            speed=speed_of_rocket)
+
+        rocket_rows_direction, rocket_column_direction, space_pressed = read_controls(canvas)
+
+        row_speed, column_speed = update_speed(row_speed, column_speed, rocket_rows_direction, rocket_column_direction)
+        row += row_speed * speed_of_rocket
+        column += column_speed * speed_of_rocket
+
+        object_row_size, object_column_size = get_object_size(frames)
+
+        row = get_axis_position(row, object_row_size, canvas_rows_size)
+        column = get_axis_position(column, object_column_size, canvas_columns_size)
+
+        if space_pressed:
+            coroutines.append(fire(canvas, row - 1, column + object_column_size // 2))
+
         draw_frame(canvas, row, column, frame)
         current_frame = frame
         canvas.refresh()
