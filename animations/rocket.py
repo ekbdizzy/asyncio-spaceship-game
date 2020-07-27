@@ -1,6 +1,4 @@
-import asyncio
-import curses
-from tools.game_state import coroutines
+from tools.game_state import coroutines, obstacles
 
 from itertools import cycle, chain
 from tools import draw_frame, sleep, read_controls, get_object_size
@@ -33,6 +31,11 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
     # curses.beep()
 
     while 0 < row < max_row and 0 < column < max_column:
+
+        for obstacle in obstacles:
+            if obstacle.has_collision(row, column):
+                return
+
         canvas.addstr(round(row), round(column), symbol)
         await sleep()
         canvas.addstr(round(row), round(column), ' ')
