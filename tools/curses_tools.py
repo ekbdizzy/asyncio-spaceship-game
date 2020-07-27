@@ -77,6 +77,8 @@ def get_frame_size(text: str, rows_only=False, columns_only=False) -> tuple or i
         columns_only=True: return columns
 
     """
+    if not text:
+        return 0, 0
 
     lines = text.splitlines()
     rows = len(lines)

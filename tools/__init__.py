@@ -10,6 +10,4 @@ from .objects_tools import (
     get_object_position
 )
 
-from .common_tools import (
-    sleep,
-)
+from .utils import sleep
