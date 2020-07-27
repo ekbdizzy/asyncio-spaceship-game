@@ -1,6 +1,6 @@
 import random
 from tools import draw_frame, read_animation_frames, get_frame_size, sleep
-from tools.game_state import obstacles, coroutines
+from tools.game_state import obstacles, coroutines, obstacles_in_last_collisions
 from tools.obstacles import Obstacle, show_obstacles
 
 frames = read_animation_frames('graphic/garbage/')
@@ -24,6 +24,12 @@ async def fly_garbage(canvas, column, garbage_frame, speed=0.5):
         obstacles.append(obstacle)
 
         await sleep()
+
+        if obstacle in obstacles_in_last_collisions:
+            obstacles_in_last_collisions.remove(obstacle)
+            obstacles.remove(obstacle)
+            draw_frame(canvas, row, column, garbage_frame, negative=True)
+            return
 
         draw_frame(canvas, row, column, garbage_frame, negative=True)
         row += speed
