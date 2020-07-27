@@ -1,10 +1,12 @@
 import time
 import curses
 import random
-from animations import blink, fire, rocket, fill_orbit_with_garbage
+from animations import blink, rocket, fill_orbit_with_garbage
 from tools import read_animation_frames
-from tools.game_state import coroutines
+from tools.game_state import coroutines, obstacles
 from typing import List
+
+from tools.obstacles import show_obstacles
 
 TIC_TIMEOUT: float = 0.1
 
@@ -34,11 +36,6 @@ def draw(canvas):
                                 column=random.randint(2, canvas_columns_size - 2),
                                 symbol=random.choice(STARS)))
 
-    # added fire
-    canvas_x_center = canvas_rows_size // 2
-    canvas_y_center = canvas_columns_size // 2
-    coroutines.append(fire(canvas, start_row=canvas_x_center, start_column=canvas_y_center))
-
     # added rocket
     coroutines.append(rocket(canvas,
                              row=2, column=2,
@@ -48,6 +45,7 @@ def draw(canvas):
 
     for i in range(5):
         coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
+
 
     while True:
         for coroutine in coroutines.copy():
