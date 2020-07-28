@@ -1,12 +1,14 @@
 from tools.game_state import coroutines
 
 from itertools import cycle, chain
-from tools import draw_frame, sleep, read_controls, get_object_size
+from tools import draw_frame, sleep, read_controls, get_object_size, read_animation_frames
 from typing import List
 from animations.fire import fire
+from animations.game_over import game_over
 
 from tools.objects_tools import get_axis_position
 from tools.physics import update_speed
+from tools.game_state import obstacles
 
 
 async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1, speed_animation_divider=1):
@@ -20,6 +22,15 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
     current_frame = ''
     row_speed, column_speed = 0, 0
     for frame in frames_infinite_cycle:
+
+        object_row_size, object_column_size = get_object_size(frames)
+
+        for obstacle in obstacles:
+            if obstacle.has_collision(row, column, object_row_size, object_column_size):
+                draw_frame(canvas, row, column, current_frame, negative=True)
+                coroutines.append(game_over(canvas, read_animation_frames('graphic/game_over/')[0]))
+                return
+
         draw_frame(canvas, row, column, current_frame, negative=True)
 
         rocket_rows_direction, rocket_column_direction, space_pressed = read_controls(canvas)
@@ -27,8 +38,6 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         row_speed, column_speed = update_speed(row_speed, column_speed, rocket_rows_direction, rocket_column_direction)
         row += row_speed * speed_of_rocket
         column += column_speed * speed_of_rocket
-
-        object_row_size, object_column_size = get_object_size(frames)
 
         row = get_axis_position(row, object_row_size, canvas_rows_size)
         column = get_axis_position(column, object_column_size, canvas_columns_size)

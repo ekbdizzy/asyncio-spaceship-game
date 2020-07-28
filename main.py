@@ -2,6 +2,7 @@ import time
 import curses
 import random
 from animations import blink, rocket, fill_orbit_with_garbage
+from animations.game_over import game_over
 from tools import read_animation_frames
 from tools.game_state import coroutines, obstacles
 from typing import List
@@ -45,7 +46,6 @@ def draw(canvas):
 
     for i in range(5):
         coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
-
 
     while True:
         for coroutine in coroutines.copy():
