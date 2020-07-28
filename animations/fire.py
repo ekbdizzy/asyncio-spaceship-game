@@ -1,5 +1,6 @@
 from tools import sleep
-from tools.game_state import obstacles_in_last_collisions, obstacles
+from tools.game_state import obstacles_in_last_collisions, obstacles, coroutines
+from animations.explosion import explode
 
 
 async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, columns_speed=0) -> None:
@@ -29,6 +30,7 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
         for obstacle in obstacles:
             if obstacle.has_collision(row, column):
                 obstacles_in_last_collisions.append(obstacle)
+                coroutines.append(explode(canvas, row, column))
                 return
 
         canvas.addstr(round(row), round(column), symbol)
