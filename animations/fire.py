@@ -9,10 +9,10 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
     row, column = start_row, start_column
 
     canvas.addstr(round(row), round(column), '*')
-    await sleep()
+    await sleep(1)
 
     canvas.addstr(round(row), round(column), 'O')
-    await sleep()
+    await sleep(1)
     canvas.addstr(round(row), round(column), ' ')
 
     row += rows_speed
@@ -34,7 +34,7 @@ async def fire(canvas, start_row: int, start_column: int, rows_speed=-0.3, colum
                 return
 
         canvas.addstr(round(row), round(column), symbol)
-        await sleep()
+        await sleep(1)
         canvas.addstr(round(row), round(column), ' ')
         row += rows_speed
         column += columns_speed

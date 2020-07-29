@@ -1,11 +1,13 @@
-from tools.game_state import coroutines
-
 from itertools import cycle, chain
-from tools import draw_frame, sleep, read_controls, get_object_size, read_animation_frames
 from typing import List
+
+from tools import draw_frame, sleep, read_controls, get_object_size, read_animation_frames
+
 from animations.fire import fire
 from animations.game_over import game_over
+from animations.explosion import explode
 
+from tools.game_state import coroutines
 from tools.objects_tools import get_axis_position
 from tools.physics import update_speed
 from tools.game_state import obstacles
@@ -29,6 +31,7 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
             if obstacle.has_collision(row, column, object_row_size, object_column_size):
                 draw_frame(canvas, row, column, current_frame, negative=True)
                 coroutines.append(game_over(canvas, read_animation_frames('graphic/game_over/')[0]))
+                coroutines.append(explode(canvas, row + 2, column))
                 return
 
         draw_frame(canvas, row, column, current_frame, negative=True)
@@ -48,4 +51,4 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         draw_frame(canvas, row, column, frame)
         current_frame = frame
         canvas.refresh()
-        await sleep()
+        await sleep(1)

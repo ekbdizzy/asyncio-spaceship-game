@@ -2,14 +2,16 @@ import time
 import curses
 import random
 from animations import blink, rocket, fill_orbit_with_garbage
-from animations.game_over import game_over
 from tools import read_animation_frames
-from tools.game_state import coroutines, obstacles
+from tools.game_state import coroutines, year
 from typing import List
 
-from tools.obstacles import show_obstacles
+from animations.year import show_year, update_year
 
-TIC_TIMEOUT: float = 0.1
+TIC_TIMEOUT: float = 0.05
+
+
+
 
 # stars
 SYMBOLS: str = '+*.:'
@@ -31,6 +33,8 @@ def draw(canvas):
     canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
 
     # added stars
+    coroutines.append(show_year(canvas.derwin(10, 4), year))
+
     for n in range(STARS_QUANTITY):
         coroutines.append(blink(canvas,
                                 row=random.randint(2, canvas_rows_size - 2),
@@ -39,13 +43,13 @@ def draw(canvas):
 
     # added rocket
     coroutines.append(rocket(canvas,
-                             row=2, column=2,
+                             row=canvas_rows_size // 2, column=canvas_columns_size // 2,
                              speed_of_rocket=SPEED_OF_ROCKET,
                              speed_animation_divider=ROCKET_ANIMATION_SPEED_DIVIDER,
                              frames=read_animation_frames(ROCKET_ANIMATIONS_FRAMES)))
 
-    for i in range(5):
-        coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
+    coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
+    coroutines.append(update_year())
 
     while True:
         for coroutine in coroutines.copy():
