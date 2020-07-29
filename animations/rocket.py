@@ -7,7 +7,7 @@ from animations.explosion import explode
 
 from tools import get_axis_position
 from tools.physics import update_speed
-from settings.game_state import obstacles, coroutines
+from settings import game_state
 from settings import settings
 
 from tools import (
@@ -33,11 +33,11 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
 
         object_row_size, object_column_size = get_object_size(frames)
 
-        for obstacle in obstacles:
+        for obstacle in game_state.obstacles:
             if obstacle.has_collision(row, column, object_row_size, object_column_size):
                 draw_frame(canvas, row, column, current_frame, negative=True)
-                coroutines.append(game_over(canvas, read_animation_frames(settings.GAME_OVER_FRAME)[0]))
-                coroutines.append(explode(canvas, row + 2, column))
+                game_state.coroutines.append(game_over(canvas, read_animation_frames(settings.GAME_OVER_FRAME)[0]))
+                game_state.coroutines.append(explode(canvas, row + 2, column))
                 return
 
         draw_frame(canvas, row, column, current_frame, negative=True)
@@ -56,8 +56,8 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         row = get_axis_position(row, object_row_size, canvas_rows_size)
         column = get_axis_position(column, object_column_size, canvas_columns_size)
 
-        if space_pressed:
-            coroutines.append(fire(canvas, row - 1, column + object_column_size // 2))
+        if space_pressed and game_state.year > settings.CANNON_APPEARS_YEAR:
+            game_state.coroutines.append(fire(canvas, row - 1, column + object_column_size // 2))
 
         draw_frame(canvas, row, column, frame)
         current_frame = frame

@@ -35,7 +35,7 @@ def draw(canvas):
                                         frames=read_animation_frames(settings.ROCKET_ANIMATIONS_FRAMES)))
 
     game_state.coroutines.append(fill_orbit_with_garbage(canvas, canvas_columns_size))
-    game_state.coroutines.append(update_year(settings.UPDATE_YEAR_TICS))
+    game_state.coroutines.append(update_year(canvas, settings.UPDATE_YEAR_TICS))
 
     while True:
         for coroutine in game_state.coroutines.copy():

@@ -19,4 +19,5 @@ GAME_OVER_FRAME = 'graphic/game_over/'
 YEAR: int = 1957
 UPDATE_YEAR_TICS = 20
 
-
+# fire
+CANNON_APPEARS_YEAR = 1980
