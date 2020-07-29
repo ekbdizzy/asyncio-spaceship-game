@@ -6,8 +6,12 @@ from .curses_tools import (
 
 from .objects_tools import (
     get_object_size,
+    get_axis_position,
+    get_object_position,
     read_animation_frames,
-    get_object_position
 )
 
-from .utils import sleep
+from .utils import (
+    sleep,
+    get_canvas_size
+)

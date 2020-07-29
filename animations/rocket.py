@@ -1,21 +1,27 @@
 from itertools import cycle, chain
 from typing import List
 
-from tools import draw_frame, sleep, read_controls, get_object_size, read_animation_frames
-
 from animations.fire import fire
 from animations.game_over import game_over
 from animations.explosion import explode
 
-from tools.game_state import coroutines
-from tools.objects_tools import get_axis_position
+from tools import get_axis_position
 from tools.physics import update_speed
-from tools.game_state import obstacles
+from settings.game_state import obstacles, coroutines
+from settings import settings
+
+from tools import (
+    draw_frame,
+    sleep,
+    read_controls,
+    get_canvas_size,
+    get_object_size,
+    read_animation_frames
+)
 
 
 async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1, speed_animation_divider=1):
-    # Note that canvas.getmaxyx() return a tuple: width and height of the window, not a max y and max x values.
-    canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
+    canvas_rows_size, canvas_columns_size = get_canvas_size(canvas)
 
     animation_groups = [[frame] * speed_animation_divider for frame in frames]
     animation = chain(*animation_groups)
@@ -30,7 +36,7 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         for obstacle in obstacles:
             if obstacle.has_collision(row, column, object_row_size, object_column_size):
                 draw_frame(canvas, row, column, current_frame, negative=True)
-                coroutines.append(game_over(canvas, read_animation_frames('graphic/game_over/')[0]))
+                coroutines.append(game_over(canvas, read_animation_frames(settings.GAME_OVER_FRAME)[0]))
                 coroutines.append(explode(canvas, row + 2, column))
                 return
 
@@ -38,7 +44,12 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
 
         rocket_rows_direction, rocket_column_direction, space_pressed = read_controls(canvas)
 
-        row_speed, column_speed = update_speed(row_speed, column_speed, rocket_rows_direction, rocket_column_direction)
+        row_speed, column_speed = update_speed(
+            row_speed,
+            column_speed,
+            rocket_rows_direction,
+            rocket_column_direction
+        )
         row += row_speed * speed_of_rocket
         column += column_speed * speed_of_rocket
 

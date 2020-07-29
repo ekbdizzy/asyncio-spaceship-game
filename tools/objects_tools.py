@@ -1,5 +1,6 @@
 import os
 from tools import read_controls, get_frame_size
+from tools.utils import get_canvas_size
 from typing import List, Tuple
 from tools.physics import update_speed
 
@@ -45,9 +46,7 @@ def get_object_position(canvas,
     current_column += column_speed * speed
 
     object_row_size, object_column_size = get_object_size(frames)
-
-    # Note that canvas.getmaxyx() return a tuple: width and height of the window, not a max y and max x values.
-    canvas_rows_size, canvas_columns_size = canvas.getmaxyx()
+    canvas_rows_size, canvas_columns_size = get_canvas_size(canvas)
 
     current_row = get_axis_position(current_row, object_row_size, canvas_rows_size)
     current_column = get_axis_position(current_column, object_column_size, canvas_columns_size)

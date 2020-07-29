@@ -1,17 +1,14 @@
 import random
+from typing import Union
 from tools import draw_frame, read_animation_frames, get_frame_size, sleep
-from tools.game_state import obstacles, obstacles_in_last_collisions, coroutines
+from settings.game_state import obstacles, obstacles_in_last_collisions, coroutines
 from tools.obstacles import Obstacle
-from tools import game_state
+from settings import game_state
 
 frames = read_animation_frames('graphic/garbage/')
 
 
-def get_garbage_quantity():
-    return 100 // (game_state.year - 1956) or 1
-
-
-def get_freq(year):
+def get_tics(year: int) -> Union[int, float]:
     if year < 1980:
         return 5
     elif 1980 <= year <= 2000:
@@ -26,8 +23,9 @@ def get_freq(year):
         return 0.4
 
 
-async def fly_garbage(canvas, column, garbage_frame, frequency, speed=0.5):
-    """Animate garbage, flying from top to bottom. Сolumn position will stay same, as specified on start."""
+async def fly_garbage(canvas, column: int, garbage_frame: str, tics: Union[int, float], speed: float = 0.5) -> None:
+    """Animate garbage, flying from top to bottom. Сolumn position will stay same, as specified on start.
+    """
     rows_number, columns_number = canvas.getmaxyx()
 
     column = max(column, 0)
@@ -43,7 +41,7 @@ async def fly_garbage(canvas, column, garbage_frame, frequency, speed=0.5):
 
         obstacles.append(obstacle)
 
-        await sleep(frequency)
+        await sleep(tics)
 
         if obstacle in obstacles_in_last_collisions:
             draw_frame(canvas, row, column, garbage_frame, negative=True)
@@ -57,12 +55,12 @@ async def fly_garbage(canvas, column, garbage_frame, frequency, speed=0.5):
         obstacles.remove(obstacle)
 
 
-async def fill_orbit_with_garbage(canvas, columns: int):
+async def fill_orbit_with_garbage(canvas, columns: int) -> None:
     while True:
-        freq = get_freq(game_state.year)
+        tics = get_tics(game_state.year)
         coroutines.append(fly_garbage(
             canvas,
             column=random.randint(1, columns - 20),
             garbage_frame=random.choice(frames),
-            frequency=int(freq) or 1))
-        await sleep(int(freq * 5))
+            tics=int(tics) or 1))
+        await sleep(int(tics * 5))

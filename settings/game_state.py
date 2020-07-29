@@ -1,8 +1,7 @@
 from typing import List
+from settings import settings
 
 coroutines: List = []
 obstacles: List = []
 obstacles_in_last_collisions = []
-
-year = 2000
-
+year = settings.YEAR
