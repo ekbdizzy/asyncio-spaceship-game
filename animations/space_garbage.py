@@ -64,5 +64,5 @@ async def fill_orbit_with_garbage(canvas, columns: int) -> None:
             canvas,
             column=random.randint(1, columns - get_frame_size(frame, columns_only=True)),
             garbage_frame=frame,
-            tics=int(tics) or 1))
+            tics=int(tics * random.randint(1, 3)) or 1))
         await sleep(int(tics * 5))
