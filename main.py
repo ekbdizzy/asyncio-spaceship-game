@@ -16,15 +16,18 @@ def draw(canvas):
     curses.curs_set(0)
     canvas.nodelay(True)
     canvas.border()
+
     canvas_rows_size, canvas_columns_size = get_canvas_size(canvas)
 
-    # added stars
+    # added current year
     game_state.coroutines.append(show_year(canvas.derwin(10, 4)))
 
+    # added stars
+    border = settings.BORDER_WIDTH
     for n in range(settings.STARS_QUANTITY):
         game_state.coroutines.append(blink(canvas,
-                                           row=random.randint(2, canvas_rows_size - 2),
-                                           column=random.randint(2, canvas_columns_size - 2),
+                                           row=random.randint(border, canvas_rows_size - border),
+                                           column=random.randint(border, canvas_columns_size - border),
                                            symbol=random.choice(settings.STARS)))
 
     # added rocket

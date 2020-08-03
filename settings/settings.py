@@ -1,10 +1,10 @@
 from typing import List
 
 TIC_TIMEOUT: float = 0.05
+BORDER_WIDTH = 2
 
 # stars
-SYMBOLS: str = '+*.:'
-STARS: List[str] = [symbol for symbol in SYMBOLS]
+STARS: List[str] = ['+', '*', '.', ':']
 STARS_QUANTITY: int = 50
 
 # rocket
@@ -16,8 +16,8 @@ ROCKET_ANIMATION_SPEED_DIVIDER = 2
 GAME_OVER_FRAME = 'graphic/game_over/'
 
 # year
-YEAR: int = 1957
+START_YEAR: int = 1957
 UPDATE_YEAR_TICS = 20
 
 # fire
-CANNON_APPEARS_YEAR = 1980
+CANNON_APPEARS_YEAR = 1960

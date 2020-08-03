@@ -35,12 +35,13 @@ async def fly_garbage(canvas, column: int, garbage_frame: str, tics: Union[int, 
 
     frame_rows, frame_columns = get_frame_size(garbage_frame)
 
+    obstacle = Obstacle(row, column, frame_rows, frame_columns)
+    obstacles.append(obstacle)
+
     while row < rows_number:
+
+        obstacle.row = row
         draw_frame(canvas, row, column, garbage_frame)
-        obstacle = Obstacle(row, column, frame_rows, frame_columns)
-
-        obstacles.append(obstacle)
-
         await sleep(tics)
 
         if obstacle in obstacles_in_last_collisions:
@@ -52,15 +53,16 @@ async def fly_garbage(canvas, column: int, garbage_frame: str, tics: Union[int, 
         draw_frame(canvas, row, column, garbage_frame, negative=True)
         row += speed
 
-        obstacles.remove(obstacle)
+    obstacles.remove(obstacle)
 
 
 async def fill_orbit_with_garbage(canvas, columns: int) -> None:
     while True:
+        frame = random.choice(frames)
         tics = get_tics(game_state.year)
         coroutines.append(fly_garbage(
             canvas,
-            column=random.randint(1, columns - 20),
-            garbage_frame=random.choice(frames),
+            column=random.randint(1, columns - get_frame_size(frame, columns_only=True)),
+            garbage_frame=frame,
             tics=int(tics) or 1))
         await sleep(int(tics * 5))

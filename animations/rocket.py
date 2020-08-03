@@ -5,7 +5,7 @@ from animations.fire import fire
 from animations.game_over import game_over
 from animations.explosion import explode
 
-from tools import get_axis_position
+from tools import limit_axis_coord
 from tools.physics import update_speed
 from settings import game_state
 from settings import settings
@@ -53,8 +53,8 @@ async def rocket(canvas, row: int, column: int, frames: List, speed_of_rocket=1,
         row += row_speed * speed_of_rocket
         column += column_speed * speed_of_rocket
 
-        row = get_axis_position(row, object_row_size, canvas_rows_size)
-        column = get_axis_position(column, object_column_size, canvas_columns_size)
+        row = limit_axis_coord(row, object_row_size, canvas_rows_size)
+        column = limit_axis_coord(column, object_column_size, canvas_columns_size)
 
         if space_pressed and game_state.year > settings.CANNON_APPEARS_YEAR:
             game_state.coroutines.append(fire(canvas, row - 1, column + object_column_size // 2))

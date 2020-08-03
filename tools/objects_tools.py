@@ -25,7 +25,7 @@ def read_animation_frames(path_to_frames: str) -> List[str]:
     return frames
 
 
-def get_axis_position(next_axis_position: int, object_axis_size: int, canvas_axis_size: int):
+def limit_axis_coord(next_axis_position: int, object_axis_size: int, canvas_axis_size: int):
     """Return value of axis_position between 1 and canvas_axis_size."""
 
     return min(max(next_axis_position, 1), canvas_axis_size - object_axis_size - 1)
@@ -48,7 +48,7 @@ def get_object_position(canvas,
     object_row_size, object_column_size = get_object_size(frames)
     canvas_rows_size, canvas_columns_size = get_canvas_size(canvas)
 
-    current_row = get_axis_position(current_row, object_row_size, canvas_rows_size)
-    current_column = get_axis_position(current_column, object_column_size, canvas_columns_size)
+    current_row = limit_axis_coord(current_row, object_row_size, canvas_rows_size)
+    current_column = limit_axis_coord(current_column, object_column_size, canvas_columns_size)
 
     return current_row, current_column, row_speed, column_speed
