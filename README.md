@@ -1,11 +1,11 @@
 ### Spaceship game in console
 
-![Spaceship game](./screenshot.png)
+![Spaceship game](https://dvmn.org/media/lessons/ezgif-6-9ef2761efd97.gif)
 
 This game is a part of [Devman](https://dvmn.org) course of [async python](https://dvmn.org/modules/async-python/).<br>
 Using: asyncio, curses.
 
-Play now: [![Run on Repl.it](https://repl.it/badge/github/ekbdizzy/spaceship_game)](https://repl.it/github/ekbdizzy/spaceship_game)
+[![Run on Repl.it](https://repl.it/badge/github/ekbdizzy/spaceship_game)](https://repl.it/github/ekbdizzy/spaceship_game)
 
 ***
 
